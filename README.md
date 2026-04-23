@@ -169,12 +169,12 @@ Password:  PhishGuard123!
 ##  Test User Accounts
 
 
-user1@test.com - password1231
-user2@test.com - password1232
-user3@test.com - password1233
-user4@test.com - password1234
-user5@test.com - password1235
-user8@test.com --password1238
+user1@test.com:    password1231
+user2@test.com:    password1232
+user3@test.com:    password1233
+user4@test.com:    password1234
+user5@test.com:    password1235
+user8@test.com:    password1238
 
 
 
