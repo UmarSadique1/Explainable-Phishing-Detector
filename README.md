@@ -26,7 +26,7 @@ The system is designed not only to detect phishing attacks but also to **educate
 
 ##  Features
 
-###  Email Analyzer
+###  Email Analyser
 - Paste any email text
 - Classifies as:
   - **Phishing**
@@ -131,7 +131,7 @@ Example performance:
 git clone (https://github.com/UmarSadique1/Explainable-Phishing-Detector.git)
 cd explainable-phishing-detector
 
-2. Create virtual environment:
+2. Create a virtual environment:
 -python3 -m venv venv
 
 -source venv/bin/activate
@@ -169,12 +169,12 @@ Password:  PhishGuard123!
 ##  Test User Accounts
 
 
-user1@test.com --- password1231
-user2@test.com --- password1232
-user3@test.com --- password1233
-user4@test.com --- password1234
-user5@test.com --- password1235
-user8@test.com --- password1238
+user1@test.com - password1231
+user2@test.com - password1232
+user3@test.com - password1233
+user4@test.com - password1234
+user5@test.com - password1235
+user8@test.com --password1238
 
 
 
@@ -222,6 +222,8 @@ There has been a minor update to your account. Please check your information whe
 https://example.com/update
 
 Thank you.
+
+
 
 
 
