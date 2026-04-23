@@ -128,7 +128,7 @@ Example performance:
 
 ### 1. Clone the repository
 
-git clone <your-repo-url>
+git clone (https://github.com/UmarSadique1/Explainable-Phishing-Detector.git)
 cd explainable-phishing-detector
 
 2. Create virtual environment:
@@ -158,14 +158,6 @@ Open in browser:
 http://127.0.0.1:5000
 
 
-pwd
-source venv/bin/activate
-source venv/bin/activate
-rm -f instance/site.db
-rm -f site.db
-python run.py
-
-
 ##  Admin Login
 
 Email:     [Admin@PhishGuard.co.uk]
@@ -176,96 +168,20 @@ Password:  PhishGuard123!
 
 ##  Test User Accounts
 
-| Email                                   | Password     |
-| --------------------------------------- | -----------  |
-| [user1@test.com](mailto:user1@test.com) | password1231 |
-| [user2@test.com](mailto:user2@test.com) | password1232 |
-| [user3@test.com](mailto:user3@test.com) | password1233 |
-| [user4@test.com](mailto:user4@test.com) | password1234 |
-| [user5@test.com](mailto:user5@test.com) | password1235 |
 
-password1238 - user8@test.com
+user1@test.com --- password1231
+user2@test.com --- password1232
+user3@test.com --- password1233
+user4@test.com --- password1234
+user5@test.com --- password1235
+user8@test.com --- password1238
+
+
 
 ## Sample Legitimate Emails (Test Data)
 
-### 1
-
-Subject: Meeting agenda for tomorrow
-Hi everyone,
-Just a reminder that our project meeting is scheduled for tomorrow at 3pm.
-Best regards
-
----
-
-### 2
-
-Subject: Weekly report update
-Please find attached the weekly report. Let me know if you have any feedback.
-
----
-
-### 3
-
-Subject: Lunch plans
-Hey, are we still on for lunch today at 1pm?
-
----
-
-### 4
-
-Subject: Project submission
-The final project has been uploaded to the portal. Please review when possible.
-
----
-
-### 5
-
-Subject: Holiday request
-I would like to request annual leave for next Friday.
-
----
-
-## Sample Phishing Emails (Test Data)
 
 ### 1
-
-Subject: Urgent - account verification required
-We detected unusual activity. Verify your account immediately:
-http://bit.ly/verify-now
-
----
-
-### 2
-
-Subject: Your bank account suspended
-Click here to restore access immediately:
-http://secure-login-alert.com
-
----
-
-### 3
-
-Subject: You won a prize!
-Congratulations! Claim your reward now:
-http://free-prize-now.com
-
----
-
-### 4
-
-Subject: Payment failed
-Your payment failed. Update your details here:
-http://update-payment-info.com
-
----
-
-### 5
-
-Subject: Security alert
-Suspicious login detected. Confirm your identity now:
-http://security-check-login.com
-
-### 6
 Subject: Meeting agenda for tomorrow
 
 Hi everyone,
@@ -281,7 +197,7 @@ Alex
 
 
 
-### 7
+### 2
 Subject: Urgent – account verification required
 
 We detected unusual activity on your account.
@@ -295,6 +211,18 @@ Failure to act within 24 hours will result in account termination.
 Support Team
 
 
+### 3
+
+Subject: Account notice
+
+Hi,
+
+There has been a minor update to your account. Please check your information when convenient to avoid any disruption:
+
+https://example.com/update
+
+Thank you.
+
 
 
 
@@ -306,16 +234,6 @@ Computer Science
 Final Year Project
 
 
-### 8
 
-Subject: Account notice
-
-Hi,
-
-There has been a minor update to your account. Please check your information when convenient to avoid any disruption:
-
-https://example.com/update
-
-Thank you.
 
 
