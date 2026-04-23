@@ -227,13 +227,12 @@ Thank you.
 
 
 
+### Author 
 
-Author:
-
-Umar Sadique
-w1985391
-Computer Science 
-Final Year Project
+### Umar Sadique
+### w1985391
+### Computer Science 
+### Final Year Project
 
 
 
