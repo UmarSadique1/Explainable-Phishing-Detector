@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>History - Explainable Phishing Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="nav-shell">
+            <div class="brand">
+                <div class="brand-text">PhishGuard AI</div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="{{ url_for('main.index') }}" class="nav-link">Analyser</a>
+                <a href="{{ url_for('main.history') }}" class="nav-link active">History</a>
+                <a href="{{ url_for('main.about') }}" class="nav-link">About</a>
+
+                {% if current_user.role == "admin" %}
+                    <a href="{{ url_for('main.admin_dashboard') }}" class="nav-link admin-link">Admin</a>
+                {% endif %}
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-avatar">
+                    {{ current_user.full_name[0] | upper }}
+                </div>
+                <div class="user-meta">
+                    <div class="user-name">{{ current_user.full_name }}</div>
+                    <div class="user-role">{{ current_user.role | capitalize }}</div>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" class="logout-link">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Analysis History</h1>
+            <p class="subtitle">
+                View your previous phishing analyses, risk classifications, and explanation summaries.
+            </p>
+        </section>
+
+        {% if analyses %}
+            <div class="history-list">
+                {% for analysis in analyses %}
+                    <div class="history-card polished-history-card">
+                        <div class="history-topbar">
+                            <div>
+                                <h3 class="history-title">Analysis #{{ analysis.id }}</h3>
+                                <p class="history-date">
+                                    {{ analysis.created_at.strftime('%d %b %Y, %H:%M') }}
+                                </p>
+                            </div>
+
+                            <div class="history-status-group">
+                                <span class="prediction-label {{ analysis.risk_badge_class }}">
+                                    {{ analysis.risk_level }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="history-summary-grid aligned-history-metrics">
+                            <div class="history-metric-box equal-height-box">
+                                <span class="history-metric-label">Final Category</span>
+                                <span class="history-metric-value">{{ analysis.prediction }}</span>
+                            </div>
+
+                            <div class="history-metric-box equal-height-box">
+                                <span class="history-metric-label">Phishing Risk Score</span>
+                                <span class="history-metric-value">{{ (analysis.phishing_probability * 100) | round | int }}%</span>
+                            </div>
+                        </div>
+
+                        <div class="history-grid improved-history-grid equal-height-history-grid">
+                            <div class="history-panel equal-height-panel">
+                                <h4>Email Text</h4>
+                                <div class="history-text fixed-history-box">
+                                    {{ analysis.email_text[:500] }}{% if analysis.email_text|length > 500 %}...{% endif %}
+                                </div>
+                            </div>
+
+                            <div class="history-panel equal-height-panel">
+                                <h4>Readable Explanation</h4>
+
+                                <div class="history-readable-explanation">
+                                    {{ analysis.readable_explanation }}
+                                </div>
+
+                                <div class="history-details-card">
+                                    <h5>Top Indicators</h5>
+
+                                    {% if analysis.top_indicators %}
+                                        <div class="history-indicator-list">
+                                            {% for indicator in analysis.top_indicators %}
+                                                <div class="history-indicator-row">
+                                                    <div class="history-indicator-rank">{{ loop.index }}</div>
+                                                    <div class="history-indicator-name">{{ indicator }}</div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p>No stored indicators available.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="explanation-card">
+                <h3>No analyses yet</h3>
+                <p class="about-paragraph">
+                    You have not analysed any emails yet. Go to the Analyzer page to begin.
+                </p>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhishGuard AI - Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="nav-shell">
+            <div class="brand">
+                <div class="brand-text">PhishGuard AI</div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="{{ url_for('main.index') }}" class="nav-link active">Analyser</a>
+                <a href="{{ url_for('main.history') }}" class="nav-link">History</a>
+                <a href="{{ url_for('main.about') }}" class="nav-link">About</a>
+
+                {% if current_user.role == "admin" %}
+                    <a href="{{ url_for('main.admin_dashboard') }}" class="nav-link admin-link">Admin</a>
+                {% endif %}
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-avatar">
+                    {{ current_user.full_name[0] | upper }}
+                </div>
+                <div class="user-meta">
+                    <div class="user-name">{{ current_user.full_name }}</div>
+                    <div class="user-role">{{ current_user.role | capitalize }}</div>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" class="logout-link">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Explainable Phishing Detector</h1>
+            <p class="subtitle">
+                Paste an email below to check whether it may be phishing and view interpretable explanation signals.
+            </p>
+        </section>
+
+        <form method="POST">
+            <textarea
+                name="email_text"
+                rows="8"
+                placeholder="Paste email content here..."
+                required
+            >{{ email_text or "" }}</textarea>
+
+            <button type="submit">Check Email</button>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if prediction %}
+            <div class="result-card">
+                <div class="prediction-layout">
+                    <div class="prediction-main">
+                        <span class="prediction-label {{ risk_badge_class }}">
+                            {{ risk_level }}
+                        </span>
+
+                        <h2 class="prediction-title">{{ prediction }}</h2>
+
+                        <p class="prediction-subtitle">
+                            The system has analysed the email content and assigned a risk category based on phishing score thresholds.
+                        </p>
+                    </div>
+
+                    <div class="probability-grid">
+                        <div class="probability-box">
+                            <span class="probability-label">Phishing Risk Score</span>
+                            <span class="probability-value">{{ (phishing_probability * 100) | round | int }}%</span>
+                        </div>
+
+                        <div class="probability-box threshold-box">
+                            <span class="probability-label">Suspicious Threshold</span>
+                            <span class="probability-value">{{ (threshold * 100) | round | int }}%</span>
+                        </div>
+
+                        <div class="probability-box threshold-box">
+                            <span class="probability-label">High Risk Threshold</span>
+                            <span class="probability-value">{{ (high_risk_threshold * 100) | round | int }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <h3>How this decision was made</h3>
+                <p class="note">
+                    The model calculates a phishing risk score for the email.
+                    Emails below <strong>{{ (threshold * 100) | round | int }}%</strong> are treated as
+                    <strong>Likely Legitimate</strong>.
+                    Emails between <strong>{{ (threshold * 100) | round | int }}%</strong> and
+                    <strong>{{ (high_risk_threshold * 100) | round | int }}%</strong> are marked as
+                    <strong>Suspicious</strong>.
+                    Emails at or above <strong>{{ (high_risk_threshold * 100) | round | int }}%</strong> are classified as
+                    <strong>Phishing</strong>.
+                </p>
+
+                <p class="risk-interpretation">
+                    {% if risk_level == "High Risk" %}
+                        This email crosses the high-risk threshold and is flagged as phishing.
+                    {% elif risk_level == "Suspicious" %}
+                        This email does not reach the high-risk phishing threshold, but it is suspicious enough to warrant caution and manual review.
+                    {% else %}
+                        This email does not exceed the suspicious threshold and is therefore treated as likely legitimate.
+                    {% endif %}
+                </p>
+
+                <div class="risk-bar-wrap">
+                    <div class="risk-bar-track">
+                        <div class="risk-threshold-marker suspicious-marker" style="left: {{ (threshold * 100) }}%;"></div>
+                        <div class="risk-threshold-marker high-marker" style="left: {{ (high_risk_threshold * 100) }}%;"></div>
+
+                        <div class="risk-bar-fill {{ risk_badge_class }}" style="width: {{ (phishing_probability * 100) | round(2) }}%;">
+                            {{ (phishing_probability * 100) | round | int }}%
+                        </div>
+                    </div>
+
+                    <div class="risk-bar-scale">
+                        <span>0%</span>
+                        <span>Suspicious: {{ (threshold * 100) | round | int }}%</span>
+                        <span>High Risk: {{ (high_risk_threshold * 100) | round | int }}%</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if lime_readable %}
+            <div class="explanation-card">
+                <h3>LIME readable explanation</h3>
+                <p class="note">{{ lime_readable }}</p>
+            </div>
+        {% endif %}
+
+        {% if highlighted_html %}
+            <div class="explanation-card">
+                <h3>Highlighted email (LIME signals)</h3>
+
+                <div class="legend">
+                    <div class="legend-pill">
+                        <span class="legend-swatch phish"></span>
+                        <span>Pushes towards phishing</span>
+                    </div>
+                    <div class="legend-pill">
+                        <span class="legend-swatch legit"></span>
+                        <span>Pushes towards legitimate</span>
+                    </div>
+                </div>
+
+                <div class="highlighted-email">
+                    {{ highlighted_html | safe }}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if lime_percent_weights %}
+            <div class="explanation-card">
+                <h3>LIME explanation (top signals)</h3>
+                <p class="note">
+                    These percentages show each signal’s share of the visible LIME explanation.
+                </p>
+
+                <div class="signal-list">
+                    {% for token, raw_weight, percent, direction in lime_percent_weights %}
+                        <div class="signal-row">
+                            <div class="signal-rank">{{ loop.index }}</div>
+                            <div class="signal-token">{{ token }}</div>
+                            <div class="signal-percent">{{ percent | round | int }}%</div>
+                            <div class="signal-direction {% if direction == 'phishing' %}phishing{% else %}legitimate{% endif %}">
+                                {% if direction == "phishing" %}
+                                    Toward Phishing
+                                {% else %}
+                                    Toward Legitimate
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if shap_readable %}
+            <div class="explanation-card">
+                <h3>SHAP readable explanation</h3>
+                <p class="note">{{ shap_readable }}</p>
+            </div>
+        {% endif %}
+
+        {% if shap_plot_base64 %}
+            <div class="explanation-card">
+                <h3>SHAP visual explanation</h3>
+                <p class="note">
+                    SHAP shows how strongly each extracted feature contributed to the final prediction.
+                </p>
+
+                <img
+                    src="data:image/png;base64,{{ shap_plot_base64 }}"
+                    alt="SHAP explanation chart"
+                    class="shap-chart"
+                >
+            </div>
+        {% endif %}
+
+        {% if shap_percent_weights %}
+            <div class="explanation-card">
+                <h3>SHAP top feature contributions</h3>
+                <p class="note">
+                    These percentages show each signal’s share of the visible SHAP explanation.
+                </p>
+
+                <div class="signal-list">
+                    {% for token, raw_weight, percent, direction in shap_percent_weights %}
+                        <div class="signal-row">
+                            <div class="signal-rank">{{ loop.index }}</div>
+                            <div class="signal-token">{{ token }}</div>
+                            <div class="signal-percent">{{ percent | round | int }}%</div>
+                            <div class="signal-direction {% if direction == 'phishing' %}phishing{% else %}legitimate{% endif %}">
+                                {% if direction == "phishing" %}
+                                    Toward Phishing
+                                {% else %}
+                                    Toward Legitimate
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

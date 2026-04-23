@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About - PhishGuard AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="nav-shell">
+            <div class="brand">
+                <div class="brand-text">PhishGuard AI</div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="{{ url_for('main.index') }}" class="nav-link">Analyser</a>
+                <a href="{{ url_for('main.history') }}" class="nav-link">History</a>
+                <a href="{{ url_for('main.about') }}" class="nav-link active">About</a>
+                
+
+                {% if current_user.role == "admin" %}
+                <a href="{{ url_for('main.admin_dashboard') }}" class="nav-link admin-link">Admin</a>
+                {% endif %}
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-avatar">
+                    {{ current_user.full_name[0] | upper }}
+                </div>
+                <div class="user-meta">
+                    <div class="user-name">{{ current_user.full_name }}</div>
+                    <div class="user-role">{{ current_user.role | capitalize }}</div>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" class="logout-link">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>About <span class="accent-text">PhishGuard AI</span></h1>
+            <p class="subtitle">
+                An intelligent phishing detection system that combines machine learning with explainable AI.
+            </p>
+        </section>
+
+        <section class="explanation-card">
+            <h3>What is PhishGuard AI?</h3>
+            <p class="about-paragraph">
+                PhishGuard AI is an explainable phishing detection platform designed to help users identify whether
+                an email is likely to be malicious or legitimate. Unlike conventional black-box classifiers,
+                the system not only produces a prediction but also reveals the signals that influenced the result.
+            </p>
+            <p class="about-paragraph">
+                The platform uses a machine learning pipeline trained on text data and integrates LIME to highlight
+                the words and phrases that most strongly push a classification towards phishing or legitimacy.
+                This supports both decision-making and user awareness by making model behaviour more transparent.
+            </p>
+            <p class="about-paragraph">
+                The wider purpose of the project is to address an important cybersecurity problem while also improving
+                user trust, interpretability, and educational value within phishing detection systems.
+            </p>
+        </section>
+
+        <section class="section-block">
+            <h2 class="section-title">How It Works</h2>
+            <div class="feature-grid two-col">
+                <div class="feature-card numbered-card">
+                    <div class="step-badge">1</div>
+                    <p>Paste an email into the analyzer interface.</p>
+                </div>
+                <div class="feature-card numbered-card">
+                    <div class="step-badge">2</div>
+                    <p>The machine learning pipeline processes the email text.</p>
+                </div>
+                <div class="feature-card numbered-card">
+                    <div class="step-badge">3</div>
+                    <p>The system predicts whether the message is phishing or legitimate.</p>
+                </div>
+                <div class="feature-card numbered-card">
+                    <div class="step-badge">4</div>
+                    <p>LIME generates highlighted explanation signals to show why the prediction was made.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-block">
+            <h2 class="section-title">Core Capabilities</h2>
+            <div class="feature-grid three-col">
+                <div class="feature-card">
+                    <h3>AI-Powered Analysis</h3>
+                    <p>
+                        Uses a trained machine learning model to classify email text based on linguistic patterns
+                        associated with phishing behaviour.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>LIME Explanations</h3>
+                    <p>
+                        Highlights influential words and phrases so that users can see which parts of an email
+                        pushed the prediction towards phishing or legitimacy.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Human-Readable Output</h3>
+                    <p>
+                        Presents results in a format that is understandable to non-technical users, supporting
+                        both usability and cybersecurity awareness.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Role-Based Access</h3>
+                    <p>
+                        Supports authenticated access with user and admin roles, enabling the project to evolve
+                        into a fuller multi-user security platform.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Explainable Security Design</h3>
+                    <p>
+                        Focuses not only on prediction accuracy but also on transparency, trust, and interpretability
+                        as essential qualities of practical security tools.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Extensible Architecture</h3>
+                    <p>
+                        The application structure is designed to support future additions such as history,
+                        dashboard analytics, threat categories, and richer explanation views.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="explanation-card">
+            <h3>Why Explainability Matters</h3>
+            <p class="about-paragraph">
+                Traditional phishing classifiers often behave like a black box: they output a label without showing
+                the reasoning behind it. In a real-world cybersecurity context, this can reduce trust and limit
+                the educational value of the system.
+            </p>
+            <p class="about-paragraph">
+                By using explainable AI techniques, PhishGuard AI makes the prediction process more transparent.
+                Users can inspect highlighted words and model signals rather than relying on a label alone.
+                This helps them understand suspicious patterns such as urgency, requests for sensitive information,
+                or deceptive wording that commonly appear in phishing attempts.
+            </p>
+        </section>
+    </main>
+</body>
+</html>

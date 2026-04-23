@@ -1,0 +1,29 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Mac
+.DS_Store
+
+# Database
+instance/
+*.db
+
+# Raw datasets
+data/email_dataset/raw/
+
+# Old data set (testing)
+sms+spam+collection/
+SMSSpamCollection
+data/sms_spam.csv
+
+# VS Code
+.vscode/
+
+# Logs
+*.log 
